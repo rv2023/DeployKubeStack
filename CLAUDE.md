@@ -49,6 +49,24 @@ deploykubestack/
     └── integration/               # Integration tests
 ```
 
+## Development Approach
+
+Development is **incremental and resource-by-resource**, not big-bang. We get one
+child resource working end-to-end (types → reconciler → RBAC → test → verified on
+a cluster) before starting the next. **Deployment is the first target** (the
+"walking skeleton"); every later resource repeats the same per-resource recipe.
+
+See **[implementation.md](implementation.md)** for the full plan — it includes a
+concepts primer focused on the controller-runtime/Go machinery (for developers
+fluent in Kubernetes but new to writing operators in Go), the phase order, the
+per-resource recipe, and per-phase "definition of done" checklists.
+
+**Rules of thumb:**
+- Do not start a new resource until the current one is unit-tested and manually verified.
+- Keep each `build<Resource>` a pure function (CR in → object out) so it's easy to test.
+- Two manifests exist: `manifest-minimal.yml` (mandatory fields only) and
+  `manifest-full.yml` (every field, for reference/extension).
+
 ## Key Commands
 
 ```bash
