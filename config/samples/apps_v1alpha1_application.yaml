@@ -2,8 +2,27 @@ apiVersion: apps.deploykubestack.com/v1alpha1
 kind: Application
 metadata:
   labels:
-    app.kubernetes.io/name: deploykubestack
+    app.kubernetes.io/name: application
+    app.kubernetes.io/instance: application-sample
+    app.kubernetes.io/part-of: deploykubestack
     app.kubernetes.io/managed-by: kustomize
   name: application-sample
 spec:
-  # TODO(user): Add fields here
+  # Required fields
+  image: nginx:latest        # Container image to deploy
+  port: 8080                 # Port to expose via Service
+
+  # Optional fields (with defaults)
+  replicas: 2                # Number of replicas (default: 1)
+
+  # If resources are not specified, defaults will be applied:
+  # CPU request/limit: 100m
+  # Memory request/limit: 100Mi
+  # To override defaults, uncomment and modify:
+  # resources:
+  #   requests:
+  #     cpu: 200m
+  #     memory: 256Mi
+  #   limits:
+  #     cpu: 500m
+  #     memory: 512Mi

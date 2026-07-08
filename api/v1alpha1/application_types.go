@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,17 +26,43 @@ import (
 
 // ApplicationSpec defines the desired state of Application.
 type ApplicationSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Image is the container image to deploy
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	Image string `json:"image"`
 
-	// Foo is an example field of Application. Edit application_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Replicas is the number of pod replicas to run
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=1000
+	// +kubebuilder:default=1
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Port is the port exposed by the service
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Port int32 `json:"port"`
+
+	// Resources defines CPU and memory requests/limits for the pod
+	// If not specified, defaults are used: 100m CPU, 100Mi memory (both requests and limits)
+	// +kubebuilder:validation:Optional
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 // ApplicationStatus defines the observed state of Application.
 type ApplicationStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Phase represents the current phase of the application
+	// +kubebuilder:validation:Enum=Pending;Provisioning;Ready;Degraded
+	Phase string `json:"phase,omitempty"`
+
+	// DeploymentReady indicates if the Deployment is ready
+	DeploymentReady bool `json:"deploymentReady,omitempty"`
+
+	// ServiceReady indicates if the Service is ready
+	ServiceReady bool `json:"serviceReady,omitempty"`
+
+	// Message provides additional information about the current state
+	Message string `json:"message,omitempty"`
 }
 
 // +kubebuilder:object:root=true
