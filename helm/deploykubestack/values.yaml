@@ -1,0 +1,145 @@
+# DeployKubeStack Helm Chart Values
+# This file contains the default configuration values for the DeployKubeStack operator
+
+# Global settings
+global:
+  # Domain for the API group
+  domain: deploykubestack.com
+
+# Image configuration
+image:
+  # Container registry
+  registry: ghcr.io
+  # Image repository
+  repository: rv2023/DeployKubeStack
+  # Image pull policy
+  pullPolicy: IfNotPresent
+  # Image tag (if not set, defaults to Chart.appVersion)
+  tag: ""
+
+# Image pull secrets (if pulling from private registry)
+imagePullSecrets: []
+  # - name: private-registry-secret
+
+# Number of controller replicas
+replicaCount: 1
+
+# Namespace where the operator will be deployed
+namespace: deploykubestack-system
+
+# Deployment name override
+nameOverride: ""
+# Full name override
+fullnameOverride: ""
+
+# Service account configuration
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod security context
+podSecurityContext:
+  fsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+
+# Container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
+
+# Resource requests and limits
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# RBAC configuration
+rbac:
+  create: true
+
+# Leader election
+leaderElection:
+  enabled: false
+  namespace: ""  # Defaults to operator namespace if empty
+
+# Webhook configuration
+webhook:
+  enabled: false
+  port: 9443
+
+# Metrics server
+metricsServer:
+  enabled: true
+  port: 8080
+  secureMetrics: true
+
+# Health probe configuration
+healthProbe:
+  enabled: true
+  port: 8081
+
+# Custom labels to add to all resources
+labels: {}
+  # app.kubernetes.io/name: deploykubestack
+  # app.kubernetes.io/version: "1.0.0"
+
+# CRD configuration
+crds:
+  # Whether to install CRDs (set to false if installing via Helm dependency)
+  install: true
+  # Whether to keep CRDs on chart deletion (recommended for production)
+  keep: true
+
+# Logging configuration
+logging:
+  level: "info"  # debug, info, warn, error
+  development: false
+
+# Environment variables for the operator
+env: []
+  # - name: CUSTOM_VAR
+  #   value: "custom_value"
+
+# Operator configuration
+operator:
+  # Enable leader election for high availability
+  leaderElect: false
+  # Metrics bind address (0 disables metrics server)
+  metricsBindAddress: ":8080"
+  # Health probe bind address
+  probeAddr: ":8081"
+  # Webhook bind address
+  webhookCertPath: ""
+  # Manager reconcile period
+  reconcilePeriod: "10s"
+
+# Controller resource limits per resource type
+controller:
+  # Maximum retries before giving up
+  maxRetries: 3
+  # Requeue duration on error
+  requeueDuration: "10s"
+  # Concurrent reconciliations
+  concurrency: 1

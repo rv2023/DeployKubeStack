@@ -1,0 +1,20 @@
+{{- if .Values.metricsServer.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "deploykubestack.fullname" . }}-controller-manager-metrics-service
+  namespace: {{ .Values.namespace | quote }}
+  labels:
+    control-plane: controller-manager
+    {{- include "deploykubestack.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: metrics
+    port: 8080
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    control-plane: controller-manager
+    {{- include "deploykubestack.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+{{- end }}

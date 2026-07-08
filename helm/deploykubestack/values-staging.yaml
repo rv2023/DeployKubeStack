@@ -1,0 +1,95 @@
+# Staging Environment Values
+# Medium resource requirements, info logging, single replica with readiness checks
+
+replicaCount: 1
+
+image:
+  registry: ghcr.io
+  repository: rv2023/DeployKubeStack
+  tag: ""  # Use Chart.appVersion
+  pullPolicy: IfNotPresent
+
+namespace: deploykubestack-system
+
+serviceAccount:
+  create: true
+  name: ""
+
+rbac:
+  create: true
+
+# Moderate resources for staging
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+# Staging logging (info level)
+logging:
+  level: info
+  development: false
+
+# Metrics and health
+metricsServer:
+  enabled: true
+  port: 8080
+
+healthProbe:
+  enabled: true
+  port: 8081
+
+webhook:
+  enabled: false
+
+# Leader election disabled in staging (single replica)
+leaderElection:
+  enabled: false
+  namespace: deploykubestack-system
+
+# CRD management
+crds:
+  install: true
+  keep: true
+
+# Security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+
+# Pod annotations
+podAnnotations: {}
+
+# Node selection - prefer Linux
+nodeSelector:
+  kubernetes.io/os: linux
+
+# Anti-affinity to spread across nodes if more replicas
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 50
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - deploykubestack
+        topologyKey: kubernetes.io/hostname
+
+tolerations: []
+
+# Custom environment variables (optional)
+env: []
+# - name: ENVIRONMENT
+#   value: "staging"

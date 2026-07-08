@@ -1,0 +1,122 @@
+# Production Environment Values
+# High availability setup, warn logging, multiple replicas with anti-affinity
+
+replicaCount: 3
+
+image:
+  registry: ghcr.io
+  repository: rv2023/DeployKubeStack
+  tag: ""  # Use Chart.appVersion
+  pullPolicy: Always
+
+namespace: deploykubestack-system
+
+serviceAccount:
+  create: true
+  name: ""
+
+rbac:
+  create: true
+
+# Production-grade resources
+resources:
+  requests:
+    cpu: 200m
+    memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+# Production logging (warn level for reduced overhead)
+logging:
+  level: warn
+  development: false
+
+# Metrics and health
+metricsServer:
+  enabled: true
+  port: 8080
+
+healthProbe:
+  enabled: true
+  port: 8081
+
+webhook:
+  enabled: false
+
+# Leader election enabled for HA
+leaderElection:
+  enabled: true
+  namespace: deploykubestack-system
+
+# CRD management
+crds:
+  install: true
+  keep: true
+
+# Security context - hardened
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  fsGroup: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+
+# Pod annotations for monitoring
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  prometheus.io/path: "/metrics"
+
+# Node selection - must be Linux, prefer high-capacity nodes
+nodeSelector:
+  kubernetes.io/os: linux
+
+# Strong anti-affinity for HA
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values:
+          - deploykubestack
+      topologyKey: kubernetes.io/hostname
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 50
+      preference:
+        matchExpressions:
+        - key: node-type
+          operator: In
+          values:
+          - system
+
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "system"
+  effect: "NoSchedule"
+
+# Image pull secrets for private registries (if needed)
+imagePullSecrets: []
+# - name: private-registry-secret
+
+# Custom environment variables
+env: []
+# - name: ENVIRONMENT
+#   value: "production"
+# - name: EXTERNAL_WEBHOOK_URL
+#   value: "https://webhooks.example.com"
+
+# Pod disruption budget for HA
+# Uncomment to enable PDB (requires Kubernetes 1.21+)
+# podDisruptionBudget:
+#   minAvailable: 2

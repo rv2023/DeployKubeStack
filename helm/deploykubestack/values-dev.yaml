@@ -1,0 +1,82 @@
+# Development Environment Values
+# Minimal resource requirements, debug logging, single replica
+
+replicaCount: 1
+
+image:
+  registry: ghcr.io
+  repository: rv2023/DeployKubeStack
+  tag: ""  # Use Chart.appVersion
+  pullPolicy: IfNotPresent
+
+namespace: deploykubestack-system
+
+serviceAccount:
+  create: true
+  name: ""
+
+rbac:
+  create: true
+
+# Minimal resources for development
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# Development logging
+logging:
+  level: debug
+  development: true
+
+# Metrics and health
+metricsServer:
+  enabled: true
+  port: 8080
+
+healthProbe:
+  enabled: true
+  port: 8081
+
+webhook:
+  enabled: false
+
+# Leader election disabled in dev (single replica)
+leaderElection:
+  enabled: false
+  namespace: deploykubestack-system
+
+# CRD management
+crds:
+  install: true
+  keep: true
+
+# Security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+
+# Pod annotations
+podAnnotations: {}
+
+# Node selection
+nodeSelector: {}
+
+affinity: {}
+
+tolerations: []
+
+# Custom environment variables (optional)
+env: []
+# - name: CUSTOM_VAR
+#   value: "custom-value"

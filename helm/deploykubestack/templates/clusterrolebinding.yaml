@@ -1,0 +1,16 @@
+{{- if .Values.rbac.create -}}
+apiVersion: {{ include "deploykubestack.rbac.apiVersion" . }}
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "deploykubestack.fullname" . }}-manager-rolebinding
+  labels:
+    {{- include "deploykubestack.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "deploykubestack.fullname" . }}-manager-role
+subjects:
+- kind: ServiceAccount
+  name: {{ include "deploykubestack.serviceAccountName" . }}
+  namespace: {{ .Values.namespace | quote }}
+{{- end }}

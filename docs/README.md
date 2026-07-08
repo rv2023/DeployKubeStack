@@ -15,12 +15,14 @@ Welcome! Here's a guide to all available documentation organized by use case.
 - **[Phase 1 Complete](guides/PHASE1_COMPLETE.md)** - What's implemented, how to use it, examples
 - **[Implementation Summary](guides/IMPLEMENTATION_SUMMARY.md)** - Deep technical details, architecture, design decisions
 - **[Deployment Guide](guides/DEPLOYMENT_GUIDE.md)** - Production deployment scenarios, troubleshooting, monitoring
+- **[Helm Deployment](guides/HELM_DEPLOYMENT.md)** - Deploy operator with Helm charts (includes CRD), configuration options, examples
 - **[Release Process](guides/RELEASE_PROCESS.md)** - How to create releases and publish Docker images to GHCR
 - **[GitHub Permissions](guides/GITHUB_PERMISSIONS.md)** - Security best practices for GitHub Actions workflows
 
 ## 📊 Reports & Status
 
 - **[Completion Report](reports/COMPLETION_REPORT.md)** - Phase 1 completion metrics, test results, quality assurance
+- **[Helm Chart Summary](reports/HELM_CHART_SUMMARY.md)** - Helm chart implementation details, components, documentation
 
 ## 🏗️ Design & Architecture
 
@@ -55,6 +57,7 @@ Welcome! Here's a guide to all available documentation organized by use case.
 |----------|---------------|
 | Get the operator running locally? | [Quick Start](quick-start/QUICK_START.md) |
 | Deploy to production? | [Deployment Guide](guides/DEPLOYMENT_GUIDE.md) |
+| Deploy with Helm? | [Helm Deployment](guides/HELM_DEPLOYMENT.md) |
 | Use the Application CRD? | [Phase 1 Complete](guides/PHASE1_COMPLETE.md) |
 | Understand the architecture? | [Implementation Summary](guides/IMPLEMENTATION_SUMMARY.md) |
 | Follow code conventions? | [CLAUDE.md](../CLAUDE.md) |

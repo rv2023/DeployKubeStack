@@ -1,0 +1,33 @@
+apiVersion: v2
+name: deploykubestack
+description: A Kubernetes operator for provisioning complete application stacks from a single custom resource
+type: application
+
+# Chart version (bump for each release)
+version: 1.0.0
+
+# Application version (the operator version)
+appVersion: "1.0.0"
+
+# Chart metadata
+keywords:
+  - operator
+  - kubernetes
+  - application-deployment
+  - docker
+  - container
+
+home: https://github.com/rv2023/DeployKubeStack
+sources:
+  - https://github.com/rv2023/DeployKubeStack
+  - https://github.com/rv2023/DeployKubeStack/tree/main/helm/deploykubestack
+
+maintainers:
+  - name: DeployKubeStack Team
+    email: team@deploykubestack.io
+
+# Chart information
+icon: https://raw.githubusercontent.com/rv2023/DeployKubeStack/main/docs/assets/icon.png
+
+# Minimum Kubernetes version
+kubeVersion: ">=1.20"

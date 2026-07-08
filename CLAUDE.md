@@ -22,7 +22,9 @@ DeployKubeStack is a Kubernetes operator that provisions a full application stac
 - ✅ Status tracking (phase, readiness flags)
 - ✅ Comprehensive unit tests (82.2% coverage, 3/3 passing)
 - ✅ Auto-generated RBAC and CRD schema
-- ✅ Full documentation (see `docs/` directory)
+- ✅ Helm chart with CRD, RBAC, Deployment, metrics service
+- ✅ Environment-specific values files (dev, staging, production HA)
+- ✅ Full documentation (10 comprehensive guides, see `docs/` directory)
 
 **Usage:**
 ```yaml
@@ -416,6 +418,8 @@ kubectl get deployment,service -l app=application-sample
 | Get running fast | [Quick Start](docs/quick-start/QUICK_START.md) |
 | Understand architecture | [Implementation Summary](docs/guides/IMPLEMENTATION_SUMMARY.md) |
 | Deploy to cluster | [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md) |
+| Deploy with Helm | [Helm Deployment](docs/guides/HELM_DEPLOYMENT.md) |
+| Configure Helm values | [Helm Values Examples](docs/guides/HELM_VALUES_EXAMPLES.md) |
 | See test results | [Completion Report](docs/reports/COMPLETION_REPORT.md) |
 | Check Phase 1 features | [Phase 1 Complete](docs/guides/PHASE1_COMPLETE.md) |
 | Plan Phase 2+ | [Implementation Plan](docs/design/implementation.md) |
@@ -431,6 +435,8 @@ kubectl get deployment,service -l app=application-sample
 - [Phase 1 Complete](docs/guides/PHASE1_COMPLETE.md) — What's implemented and how to use it
 - [Implementation Summary](docs/guides/IMPLEMENTATION_SUMMARY.md) — Deep technical details and architecture
 - [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md) — Production deployment, troubleshooting, monitoring
+- [Helm Deployment](docs/guides/HELM_DEPLOYMENT.md) — Deploy operator with Helm charts (includes CRD)
+- [Helm Values Examples](docs/guides/HELM_VALUES_EXAMPLES.md) — Environment-specific values (dev, staging, prod)
 - [Completion Report](docs/reports/COMPLETION_REPORT.md) — Phase 1 metrics, tests, quality assurance
 - [Implementation Plan](docs/design/implementation.md) — Original phase-by-phase plan and roadmap
 

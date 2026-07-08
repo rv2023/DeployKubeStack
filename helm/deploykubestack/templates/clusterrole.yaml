@@ -1,0 +1,107 @@
+{{- if .Values.rbac.create -}}
+apiVersion: {{ include "deploykubestack.rbac.apiVersion" . }}
+kind: ClusterRole
+metadata:
+  name: {{ include "deploykubestack.fullname" . }}-manager-role
+  labels:
+    {{- include "deploykubestack.labels" . | nindent 4 }}
+rules:
+# DeployKubeStack Application CRD permissions
+- apiGroups:
+    - apps.{{ .Values.global.domain }}
+  resources:
+    - applications
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - apps.{{ .Values.global.domain }}
+  resources:
+    - applications/finalizers
+  verbs:
+    - update
+- apiGroups:
+    - apps.{{ .Values.global.domain }}
+  resources:
+    - applications/status
+  verbs:
+    - get
+    - patch
+    - update
+
+# Deployment permissions (for managing child resources)
+- apiGroups:
+    - apps
+  resources:
+    - deployments
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+
+# Service permissions (for managing child resources)
+- apiGroups:
+    - ""
+  resources:
+    - services
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+
+# Leader election permissions (if enabled)
+{{- if .Values.leaderElection.enabled }}
+- apiGroups:
+    - ""
+  resources:
+    - configmaps
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
+- apiGroups:
+    - coordination.k8s.io
+  resources:
+    - leases
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - update
+    - patch
+    - delete
+- apiGroups:
+    - ""
+  resources:
+    - events
+  verbs:
+    - create
+    - patch
+{{- end }}
+
+# Metrics permissions (for the metrics server)
+{{- if .Values.metricsServer.enabled }}
+- nonResourceURLs:
+    - /metrics
+  verbs:
+    - get
+{{- end }}
+{{- end }}
