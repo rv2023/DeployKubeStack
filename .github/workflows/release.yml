@@ -1,0 +1,99 @@
+name: Release - Build and Push Docker Image
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'release-*'
+
+# Explicit permissions (principle of least privilege)
+permissions:
+  contents: read      # Required to read repository content
+  packages: write     # Required to push to GitHub Container Registry
+  id-token: write     # Required for OIDC token generation (future SBOM signing)
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    # Job-level permissions (inherited from workflow, can be restricted further)
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    environment: release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Use github.token (automatic token) instead of secrets.GITHUB_TOKEN
+          # Both work identically, but github.token is more explicit and recommended
+          password: ${{ github.token }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create Release Notes
+        id: release_notes
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "image=ghcr.io/${{ github.repository }}:${TAG}" >> $GITHUB_OUTPUT
+          echo "Docker image pushed to: ghcr.io/${{ github.repository }}:${TAG}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+          body: |
+            ## Docker Image
+
+            This release includes a Docker image for the DeployKubeStack operator.
+
+            ### Pull the image:
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            ```
+
+            ### Deploy to Kubernetes:
+            ```bash
+            make deploy IMG=ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            ```
+
+            ### Or use it in your deployment manifest:
+            ```yaml
+            image: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            ```
+        env:
+          # Use github.token (automatic token) for better security and clarity
+          GITHUB_TOKEN: ${{ github.token }}

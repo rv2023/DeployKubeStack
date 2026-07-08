@@ -15,6 +15,8 @@ Welcome! Here's a guide to all available documentation organized by use case.
 - **[Phase 1 Complete](guides/PHASE1_COMPLETE.md)** - What's implemented, how to use it, examples
 - **[Implementation Summary](guides/IMPLEMENTATION_SUMMARY.md)** - Deep technical details, architecture, design decisions
 - **[Deployment Guide](guides/DEPLOYMENT_GUIDE.md)** - Production deployment scenarios, troubleshooting, monitoring
+- **[Release Process](guides/RELEASE_PROCESS.md)** - How to create releases and publish Docker images to GHCR
+- **[GitHub Permissions](guides/GITHUB_PERMISSIONS.md)** - Security best practices for GitHub Actions workflows
 
 ## 📊 Reports & Status
 
@@ -57,6 +59,8 @@ Welcome! Here's a guide to all available documentation organized by use case.
 | Understand the architecture? | [Implementation Summary](guides/IMPLEMENTATION_SUMMARY.md) |
 | Follow code conventions? | [CLAUDE.md](../CLAUDE.md) |
 | Troubleshoot issues? | [Deployment Guide](guides/DEPLOYMENT_GUIDE.md#troubleshooting) |
+| Create a release? | [Release Process](guides/RELEASE_PROCESS.md) |
+| Understand GitHub permissions? | [GitHub Permissions](guides/GITHUB_PERMISSIONS.md) |
 | See what was tested? | [Completion Report](reports/COMPLETION_REPORT.md) |
 | Plan Phase 2+ features? | [Implementation Plan](design/implementation.md) |
 
